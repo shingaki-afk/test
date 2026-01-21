@@ -1,0 +1,1288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{97E3A565-A0FE-4F99-AAE9-860027001740}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ODIS</RootNamespace>
+    <AssemblyName>ODIS</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>\\Daikensrv03\21_全体共通\40_総務発信_管理\ODIS\ClickOnce\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>1555</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>A25E82933A258E8B769517CBD4E699974F170B25</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>ODIS_7_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>50d02f0fabcdd.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="C1.C1Excel.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
+    <Reference Include="C1.C1Pdf.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=79882d576c6336da" />
+    <Reference Include="C1.C1Report.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=594a0605db190bb9, processorArchitecture=MSIL" />
+    <Reference Include="C1.C1Zip.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=79882d576c6336da" />
+    <Reference Include="C1.DataEngine.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=79882d576c6336da" />
+    <Reference Include="C1.Win.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=944ae1ea0e47ca04" />
+    <Reference Include="C1.Win.BarCode.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=79882d576c6336da" />
+    <Reference Include="C1.Win.C1Chart.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=a22e16972c085838" />
+    <Reference Include="C1.Win.C1Chart3D.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=a22e16972c085838" />
+    <Reference Include="C1.Win.C1Command.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=e808566f358766d8" />
+    <Reference Include="C1.Win.C1Document.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=944ae1ea0e47ca04" />
+    <Reference Include="C1.Win.C1DX.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=944ae1ea0e47ca04" />
+    <Reference Include="C1.Win.C1FlexGrid.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
+    <Reference Include="C1.Win.C1Input.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=7e7ff60f0c214f9a" />
+    <Reference Include="C1.Win.C1InputPanel.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=79882d576c6336da" />
+    <Reference Include="C1.Win.C1List.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=6b24f8f981dbd7bc, processorArchitecture=MSIL" />
+    <Reference Include="C1.Win.C1ReportDesigner.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=fb528571dbff5bd2, processorArchitecture=MSIL" />
+    <Reference Include="C1.Win.C1Ribbon.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=79882d576c6336da" />
+    <Reference Include="C1.Win.C1Sizer.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
+    <Reference Include="C1.Win.C1TrueDBGrid.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=75ae3fb0e2b1e0da, processorArchitecture=MSIL" />
+    <Reference Include="C1.Win.FlexChart.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=3aa2920c09e0aefd" />
+    <Reference Include="C1.Win.FlexPivot.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
+    <Reference Include="C1.Win.FlexReport.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=944ae1ea0e47ca04, processorArchitecture=MSIL" />
+    <Reference Include="C1.Win.FlexViewer.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=944ae1ea0e47ca04, processorArchitecture=MSIL" />
+    <Reference Include="C1.Win.ImportServices.4, Version=4.0.20163.226, Culture=neutral, PublicKeyToken=944ae1ea0e47ca04" />
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Mono.Security">
+      <HintPath>..\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\..\..\..\..\Downloads\Npgsql2.0.11.94-bin-ms.net\Npgsql2.0.11.94-bin-ms.net\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="ReachFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Messaging" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Client.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Client.Designer.cs">
+      <DependentUpon>Client.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common.cs" />
+    <Compile Include="DaysSet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DaysSet.Designer.cs">
+      <DependentUpon>DaysSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExData.Designer.cs">
+      <DependentUpon>ExData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\GinouZ.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\GinouZ.Designer.cs">
+      <DependentUpon>GinouZ.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\AfterCalc_PCA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\AfterCalc_PCA.Designer.cs">
+      <DependentUpon>AfterCalc_PCA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\BillKan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\BillKan.Designer.cs">
+      <DependentUpon>BillKan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\BillKan_list.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\BillKan_list.Designer.cs">
+      <DependentUpon>BillKan_list.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Chart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Chart.Designer.cs">
+      <DependentUpon>Chart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\CheckList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\CheckList.Designer.cs">
+      <DependentUpon>CheckList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Com.cs" />
+    <Compile Include="ODIS\CopyReason.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\CopyReason.Designer.cs">
+      <DependentUpon>CopyReason.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Denpyou.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Denpyou.Designer.cs">
+      <DependentUpon>Denpyou.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\DetailsKKSum.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\DetailsKKSum.Designer.cs">
+      <DependentUpon>DetailsKKSum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\DetailsS_KK.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\DetailsS_KK.Designer.cs">
+      <DependentUpon>DetailsS_KK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\DetailsS_Yosan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\DetailsS_Yosan.Designer.cs">
+      <DependentUpon>DetailsS_Yosan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Emp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Emp.Designer.cs">
+      <DependentUpon>Emp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\etc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\etc.Designer.cs">
+      <DependentUpon>etc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\AccountSet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\AccountSet.Designer.cs">
+      <DependentUpon>AccountSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KanriKeisuu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KanriKeisuu.Designer.cs">
+      <DependentUpon>KanriKeisuu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KanriKeisuu53.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KanriKeisuu53.Designer.cs">
+      <DependentUpon>KanriKeisuu53.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\NinkuKeihi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\NinkuKeihi.Designer.cs">
+      <DependentUpon>NinkuKeihi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\SList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\SList.Designer.cs">
+      <DependentUpon>SList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\SmartHRData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\SmartHRData.Designer.cs">
+      <DependentUpon>SmartHRData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\SmartHR_Get.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\SmartHR_Get.Designer.cs">
+      <DependentUpon>SmartHR_Get.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\SmartHR.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\SmartHR.Designer.cs">
+      <DependentUpon>SmartHR.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\YosanTotalSyokusyu_Zenkihi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\YosanTotalSyokusyu_Zenkihi.Designer.cs">
+      <DependentUpon>YosanTotalSyokusyu_Zenkihi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KyuuyoChange.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KyuuyoChange.Designer.cs">
+      <DependentUpon>KyuuyoChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Saichin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Saichin.Designer.cs">
+      <DependentUpon>Saichin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\YosanUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\YosanUp.Designer.cs">
+      <DependentUpon>YosanUp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\ZissekiHi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\ZissekiHi.Designer.cs">
+      <DependentUpon>ZissekiHi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\YosanTsukibetsu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\YosanTsukibetsu.Designer.cs">
+      <DependentUpon>YosanTsukibetsu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KamokuYosan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KamokuYosan.Designer.cs">
+      <DependentUpon>KamokuYosan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Kamoku_Ex.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Kamoku_Ex.Designer.cs">
+      <DependentUpon>Kamoku_Ex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\YosanTotal_Zenkihi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\YosanTotal_Zenkihi.Designer.cs">
+      <DependentUpon>YosanTotal_Zenkihi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\YosanTotalSyokusyu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\YosanTotalSyokusyu.Designer.cs">
+      <DependentUpon>YosanTotalSyokusyu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\YosanTotal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\YosanTotal.Designer.cs">
+      <DependentUpon>YosanTotal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KaikeiRenkei.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KaikeiRenkei.Designer.cs">
+      <DependentUpon>KaikeiRenkei.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Kaikei_PCA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Kaikei_PCA.Designer.cs">
+      <DependentUpon>Kaikei_PCA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Kamoku.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Kamoku.Designer.cs">
+      <DependentUpon>Kamoku.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Kenshin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Kenshin.Designer.cs">
+      <DependentUpon>Kenshin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Kintone.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Kintone.Designer.cs">
+      <DependentUpon>Kintone.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Koteietc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Koteietc.Designer.cs">
+      <DependentUpon>Koteietc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\HendouKoujo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\HendouKoujo.Designer.cs">
+      <DependentUpon>HendouKoujo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\RinjiTeate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\RinjiTeate.Designer.cs">
+      <DependentUpon>RinjiTeate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KoujoNyuuryoku.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KoujoNyuuryoku.Designer.cs">
+      <DependentUpon>KoujoNyuuryoku.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KouzaS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KouzaS.Designer.cs">
+      <DependentUpon>KouzaS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\RiyuuKanriZin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\RiyuuKanriZin.Designer.cs">
+      <DependentUpon>RiyuuKanriZin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Soushikyuu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Soushikyuu.Designer.cs">
+      <DependentUpon>Soushikyuu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Kyuuyo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Kyuuyo.Designer.cs">
+      <DependentUpon>Kyuuyo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Ninku.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Ninku.Designer.cs">
+      <DependentUpon>Ninku.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\SelectShikaku.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\SelectShikaku.Designer.cs">
+      <DependentUpon>SelectShikaku.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\SelectIdouDay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\SelectIdouDay.Designer.cs">
+      <DependentUpon>SelectIdouDay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\ShikakuKigen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\ShikakuKigen.Designer.cs">
+      <DependentUpon>ShikakuKigen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\TaisyokuK.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\TaisyokuK.Designer.cs">
+      <DependentUpon>TaisyokuK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Genpyou.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Genpyou.Designer.cs">
+      <DependentUpon>Genpyou.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\HardSoft.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\HardSoft.Designer.cs">
+      <DependentUpon>HardSoft.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KaikeiCheck.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KaikeiCheck.Designer.cs">
+      <DependentUpon>KaikeiCheck.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\GyoumuKanri.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\GyoumuKanri.Designer.cs">
+      <DependentUpon>GyoumuKanri.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KeisuuKanri.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KeisuuKanri.Designer.cs">
+      <DependentUpon>KeisuuKanri.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KeiyakuList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KeiyakuList.Designer.cs">
+      <DependentUpon>KeiyakuList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Kouza.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Kouza.Designer.cs">
+      <DependentUpon>Kouza.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KaisuuKanri.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KaisuuKanri.Designer.cs">
+      <DependentUpon>KaisuuKanri.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\RiyuuKanri.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\RiyuuKanri.Designer.cs">
+      <DependentUpon>RiyuuKanri.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Nenchou.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Nenchou.Designer.cs">
+      <DependentUpon>Nenchou.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Nyuusya.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Nyuusya.Designer.cs">
+      <DependentUpon>Nyuusya.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Scramble.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Scramble.Designer.cs">
+      <DependentUpon>Scramble.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\SelectAdress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\SelectAdress.Designer.cs">
+      <DependentUpon>SelectAdress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\SelectEmpNyu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\SelectEmpNyu.Designer.cs">
+      <DependentUpon>SelectEmpNyu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KoteiKoujo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KoteiKoujo.Designer.cs">
+      <DependentUpon>KoteiKoujo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\TanmatsuK.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\TanmatsuK.Designer.cs">
+      <DependentUpon>TanmatsuK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Uriage_bk.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Uriage_bk.Designer.cs">
+      <DependentUpon>Uriage_bk.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\WebMeisai.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\WebMeisai.Designer.cs">
+      <DependentUpon>WebMeisai.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\YuuKyuu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\YuuKyuu.Designer.cs">
+      <DependentUpon>YuuKyuu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\MokuDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\MokuDetail.Designer.cs">
+      <DependentUpon>MokuDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Nikkyu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Nikkyu.Designer.cs">
+      <DependentUpon>Nikkyu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\TantouT.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\TantouT.Designer.cs">
+      <DependentUpon>TantouT.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Kourei.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Kourei.Designer.cs">
+      <DependentUpon>Kourei.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KubunKanri_Shikaku.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KubunKanri_Shikaku.Designer.cs">
+      <DependentUpon>KubunKanri_Shikaku.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\UpdateHis.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\UpdateHis.Designer.cs">
+      <DependentUpon>UpdateHis.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Timer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Timer.Designer.cs">
+      <DependentUpon>Timer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Furikae.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Furikae.Designer.cs">
+      <DependentUpon>Furikae.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Hyperlink.cs" />
+    <Compile Include="ODIS\Kensyuu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Kensyuu.Designer.cs">
+      <DependentUpon>Kensyuu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KintaiCK.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KintaiCK.Designer.cs">
+      <DependentUpon>KintaiCK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KMeisai.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KMeisai.Designer.cs">
+      <DependentUpon>KMeisai.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Ringi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Ringi.Designer.cs">
+      <DependentUpon>Ringi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\RingiMini.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\RingiMini.Designer.cs">
+      <DependentUpon>RingiMini.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\SelectEmp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\SelectEmp.Designer.cs">
+      <DependentUpon>SelectEmp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Semi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Semi.Designer.cs">
+      <DependentUpon>Semi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\shikaku.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\shikaku.Designer.cs">
+      <DependentUpon>shikaku.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\SyukkouSakiEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\SyukkouSakiEdit.Designer.cs">
+      <DependentUpon>SyukkouSakiEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Taisya.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Taisya.Designer.cs">
+      <DependentUpon>Taisya.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\TData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\TData.Designer.cs">
+      <DependentUpon>TData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\TermList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\TermList.Designer.cs">
+      <DependentUpon>TermList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\UriageKeiyaku.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\UriageKeiyaku.Designer.cs">
+      <DependentUpon>UriageKeiyaku.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\ZeeMEC.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\ZeeMEC.Designer.cs">
+      <DependentUpon>ZeeMEC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\ZigyouTouroku.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\ZigyouTouroku.Designer.cs">
+      <DependentUpon>ZigyouTouroku.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\graph.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\graph.Designer.cs">
+      <DependentUpon>graph.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Kaikei.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Kaikei.Designer.cs">
+      <DependentUpon>Kaikei.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KakoKaikei.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KakoKaikei.Designer.cs">
+      <DependentUpon>KakoKaikei.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\KeisuuYM.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\KeisuuYM.Designer.cs">
+      <DependentUpon>KeisuuYM.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OCRList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OCRList.Designer.cs">
+      <DependentUpon>OCRList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Rieki.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Rieki.Designer.cs">
+      <DependentUpon>Rieki.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Uriage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Uriage.Designer.cs">
+      <DependentUpon>Uriage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\TeateKoujoCheck.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\TeateKoujoCheck.Designer.cs">
+      <DependentUpon>TeateKoujoCheck.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Tekisei.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Tekisei.Designer.cs">
+      <DependentUpon>Tekisei.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\ZigyouUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\ZigyouUp.Designer.cs">
+      <DependentUpon>ZigyouUp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\Ziko.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\Ziko.Designer.cs">
+      <DependentUpon>Ziko.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OwnerSet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OwnerSet.Designer.cs">
+      <DependentUpon>OwnerSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SendMail.cs" />
+    <Compile Include="SyoteiDays_dns.cs" />
+    <Compile Include="SyoteiDays.cs" />
+    <Compile Include="TargetDays.cs" />
+    <Compile Include="Administrator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Administrator.Designer.cs">
+      <DependentUpon>Administrator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ODIS\kakoUriage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ODIS\kakoUriage.Designer.cs">
+      <DependentUpon>kakoUriage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="test.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="test.Designer.cs">
+      <DependentUpon>test.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Client.resx">
+      <DependentUpon>Client.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DaysSet.resx">
+      <DependentUpon>DaysSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExData.resx">
+      <DependentUpon>ExData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\GinouZ.resx">
+      <DependentUpon>GinouZ.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\AfterCalc_PCA.resx">
+      <DependentUpon>AfterCalc_PCA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\BillKan.resx">
+      <DependentUpon>BillKan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\BillKan_list.resx">
+      <DependentUpon>BillKan_list.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Chart.resx">
+      <DependentUpon>Chart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\CheckList.resx">
+      <DependentUpon>CheckList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\CopyReason.resx">
+      <DependentUpon>CopyReason.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Denpyou.resx">
+      <DependentUpon>Denpyou.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\DetailsKKSum.resx">
+      <DependentUpon>DetailsKKSum.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\DetailsS_KK.resx">
+      <DependentUpon>DetailsS_KK.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\DetailsS_Yosan.resx">
+      <DependentUpon>DetailsS_Yosan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Emp.resx">
+      <DependentUpon>Emp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\etc.resx">
+      <DependentUpon>etc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KanriKeisuu.resx">
+      <DependentUpon>KanriKeisuu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KanriKeisuu53.resx">
+      <DependentUpon>KanriKeisuu53.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KaikeiRenkei.resx">
+      <DependentUpon>KaikeiRenkei.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Kaikei_PCA.resx">
+      <DependentUpon>Kaikei_PCA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\NinkuKeihi.resx">
+      <DependentUpon>NinkuKeihi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\SList.resx">
+      <DependentUpon>SList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\SmartHRData.resx">
+      <DependentUpon>SmartHRData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\SmartHR_Get.resx">
+      <DependentUpon>SmartHR_Get.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\SmartHR.resx">
+      <DependentUpon>SmartHR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\YosanTotalSyokusyu_Zenkihi.resx">
+      <DependentUpon>YosanTotalSyokusyu_Zenkihi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KyuuyoChange.resx">
+      <DependentUpon>KyuuyoChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Saichin.resx">
+      <DependentUpon>Saichin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\YosanUp.resx">
+      <DependentUpon>YosanUp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\ZissekiHi.resx">
+      <DependentUpon>ZissekiHi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\YosanTsukibetsu.resx">
+      <DependentUpon>YosanTsukibetsu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KamokuYosan.resx">
+      <DependentUpon>KamokuYosan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Kamoku.resx">
+      <DependentUpon>Kamoku.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Kamoku_Ex.resx">
+      <DependentUpon>Kamoku_Ex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Kenshin.resx">
+      <DependentUpon>Kenshin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Genpyou.resx">
+      <DependentUpon>Genpyou.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\HardSoft.resx">
+      <DependentUpon>HardSoft.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KaikeiCheck.resx">
+      <DependentUpon>KaikeiCheck.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\GyoumuKanri.resx">
+      <DependentUpon>GyoumuKanri.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KeisuuKanri.resx">
+      <DependentUpon>KeisuuKanri.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KeiyakuList.resx">
+      <DependentUpon>KeiyakuList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Kintone.resx">
+      <DependentUpon>Kintone.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Koteietc.resx">
+      <DependentUpon>Koteietc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\HendouKoujo.resx">
+      <DependentUpon>HendouKoujo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\RinjiTeate.resx">
+      <DependentUpon>RinjiTeate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Kouza.resx">
+      <DependentUpon>Kouza.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KaisuuKanri.resx">
+      <DependentUpon>KaisuuKanri.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KoujoNyuuryoku.resx">
+      <DependentUpon>KoujoNyuuryoku.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KouzaS.resx">
+      <DependentUpon>KouzaS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\RiyuuKanriZin.resx">
+      <DependentUpon>RiyuuKanriZin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Soushikyuu.resx">
+      <DependentUpon>Soushikyuu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Kyuuyo.resx">
+      <DependentUpon>Kyuuyo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Ninku.resx">
+      <DependentUpon>Ninku.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\RiyuuKanri.resx">
+      <DependentUpon>RiyuuKanri.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Nenchou.resx">
+      <DependentUpon>Nenchou.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Nyuusya.resx">
+      <DependentUpon>Nyuusya.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Scramble.resx">
+      <DependentUpon>Scramble.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\SelectShikaku.resx">
+      <DependentUpon>SelectShikaku.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\SelectAdress.resx">
+      <DependentUpon>SelectAdress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\SelectIdouDay.resx">
+      <DependentUpon>SelectIdouDay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\SelectEmpNyu.resx">
+      <DependentUpon>SelectEmpNyu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KoteiKoujo.resx">
+      <DependentUpon>KoteiKoujo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\ShikakuKigen.resx">
+      <DependentUpon>ShikakuKigen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\TaisyokuK.resx">
+      <DependentUpon>TaisyokuK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\AccountSet.resx">
+      <DependentUpon>AccountSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\TanmatsuK.resx">
+      <DependentUpon>TanmatsuK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Uriage_bk.resx">
+      <DependentUpon>Uriage_bk.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\WebMeisai.resx">
+      <DependentUpon>WebMeisai.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\YosanTotal_Zenkihi.resx">
+      <DependentUpon>YosanTotal_Zenkihi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\YosanTotalSyokusyu.resx">
+      <DependentUpon>YosanTotalSyokusyu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\YosanTotal.resx">
+      <DependentUpon>YosanTotal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\YuuKyuu.resx">
+      <DependentUpon>YuuKyuu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\MokuDetail.resx">
+      <DependentUpon>MokuDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Nikkyu.resx">
+      <DependentUpon>Nikkyu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\TantouT.resx">
+      <DependentUpon>TantouT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Kourei.resx">
+      <DependentUpon>Kourei.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KubunKanri_Shikaku.resx">
+      <DependentUpon>KubunKanri_Shikaku.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\UpdateHis.resx">
+      <DependentUpon>UpdateHis.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Timer.resx">
+      <DependentUpon>Timer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Furikae.resx">
+      <DependentUpon>Furikae.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Kensyuu.resx">
+      <DependentUpon>Kensyuu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KintaiCK.resx">
+      <DependentUpon>KintaiCK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KMeisai.resx">
+      <DependentUpon>KMeisai.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Ringi.resx">
+      <DependentUpon>Ringi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\RingiMini.resx">
+      <DependentUpon>RingiMini.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\SelectEmp.resx">
+      <DependentUpon>SelectEmp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Semi.resx">
+      <DependentUpon>Semi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\shikaku.resx">
+      <DependentUpon>shikaku.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\SyukkouSakiEdit.resx">
+      <DependentUpon>SyukkouSakiEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Taisya.resx">
+      <DependentUpon>Taisya.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\TData.resx">
+      <DependentUpon>TData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\TermList.resx">
+      <DependentUpon>TermList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\UriageKeiyaku.resx">
+      <DependentUpon>UriageKeiyaku.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\ZeeMEC.resx">
+      <DependentUpon>ZeeMEC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\ZigyouTouroku.resx">
+      <DependentUpon>ZigyouTouroku.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\graph.resx">
+      <DependentUpon>graph.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Kaikei.resx">
+      <DependentUpon>Kaikei.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KakoKaikei.resx">
+      <DependentUpon>KakoKaikei.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\KeisuuYM.resx">
+      <DependentUpon>KeisuuYM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OCRList.resx">
+      <DependentUpon>OCRList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Rieki.resx">
+      <DependentUpon>Rieki.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Uriage.resx">
+      <DependentUpon>Uriage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\TeateKoujoCheck.resx">
+      <DependentUpon>TeateKoujoCheck.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Tekisei.resx">
+      <DependentUpon>Tekisei.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\ZigyouUp.resx">
+      <DependentUpon>ZigyouUp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\Ziko.resx">
+      <DependentUpon>Ziko.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OwnerSet.resx">
+      <DependentUpon>OwnerSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Administrator.resx">
+      <DependentUpon>Administrator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ODIS\kakoUriage.resx">
+      <DependentUpon>kakoUriage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="test.resx">
+      <DependentUpon>test.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="kintai_TemporaryKey.pfx" />
+    <None Include="ODIS_1_TemporaryKey.pfx" />
+    <None Include="ODIS_2_TemporaryKey.pfx" />
+    <None Include="ODIS_3_TemporaryKey.pfx" />
+    <None Include="ODIS_4_TemporaryKey.pfx" />
+    <None Include="ODIS_5_TemporaryKey.pfx" />
+    <None Include="ODIS_6_TemporaryKey.pfx" />
+    <None Include="ODIS_7_TemporaryKey.pfx" />
+    <None Include="ODIS_TemporaryKey.pfx" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 および x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows インストーラー 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ダイケンマーク.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="50d02f0fabcdd.ico" />
+    <Content Include="cli-kintone.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>7</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

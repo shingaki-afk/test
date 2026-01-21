@@ -1,0 +1,1170 @@
+﻿using C1.C1Excel;
+using Microsoft.VisualBasic;
+using ODIS.ODIS;
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Deployment.Application;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace ODIS
+{
+    public partial class Main : Form
+    {
+        /// <summary>
+        /// 共通クラスのインスタンス
+        /// </summary>
+        private Common co = new Common();
+
+        private DataTable dt = new DataTable();
+        private DataTable dt2 = new DataTable();
+        private DataTable aipodt = new DataTable();
+        private string nl = Environment.NewLine;
+        private DateTime date = new DateTime();
+        private bool flg = new bool();
+
+        public Main()
+        {
+            InitializeComponent();
+
+            //ガベージ
+            System.GC.Collect();
+
+            //フォームを最大化
+            this.WindowState = FormWindowState.Maximized;
+
+            //グリッドビューのコピー
+            dataGridView1.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
+
+            //フォントサイズ変更
+            dataGridView1.DefaultCellStyle.Font = new Font("Tahoma", 10);
+
+            comboBox1.Items.Add("【情報】操作履歴");
+            comboBox1.Items.Add("【情報】更新履歴");
+            comboBox1.Items.Add("【情報】従業員誕生日　直近一週間");
+            comboBox1.Items.Add("【情報】免許(資格)・登録手当一覧");
+            comboBox1.Items.Add("【情報】免許手当例外一覧");
+            comboBox1.Items.Add("【情報】有休残日数一覧");
+            comboBox1.Items.Add("【情報】回数1項目一覧");
+            //comboBox1.Items.Add("【情報】勤怠入力_入力状況一覧");
+            //comboBox1.Items.Add("【情報】勤怠入力_警告一覧");
+            //comboBox1.Items.Add("【情報】休業手当");
+            //comboBox1.Items.Add("【情報】休業手当_組織現場集計");
+            //comboBox1.Items.Add("【情報】休業申請_雇保加入");
+            //comboBox1.Items.Add("【情報】休業申請_雇保未加入");
+            //comboBox1.Items.Add("【情報】雇用保険と所定労働日数");
+            //comboBox1.Items.Add("【情報】通信手当一覧");
+
+            comboBox1.Items.Add("【警告】事業登録 有効期限間近順");
+            comboBox1.Items.Add("【警告】従業員定年日　間近順");
+            comboBox1.Items.Add("【警告】高齢契約終了日　間近順");
+            comboBox1.Items.Add("【警告】試用期間中従業員");
+
+            comboBox1.Items.Add("【エラー】通勤管理エラー一覧");
+            comboBox1.Items.Add("【エラー】資格有効期限切れor未入力");
+            comboBox1.Items.Add("【エラー】免許・登録・扶養手当不一致");
+            comboBox1.Items.Add("【エラー】未発令一覧");
+            comboBox1.Items.Add("【エラー】人事情報エラーチェック結果");
+            comboBox1.Items.Add("【情報】正社員雇用変更一覧(2015/01/01～)");
+            //comboBox1.Items.Add("【シミュ】通勤手当改定シミュレーション");
+
+            if (Convert.ToInt16(Program.yakusyokucd) >= 0120 || Program.loginname == "喜屋武　大祐")
+            {
+                comboBox1.Items.Add("基準不明確手当一覧");
+
+                if (Program.loginname == "喜屋武　大祐")
+                {
+                    //comboBox1.Items.Add("固定控除一覧表示");
+                    comboBox1.Items.Add("異動入力で登録された家族情報");
+                }
+            }
+
+            if (Program.loginname == "喜屋武　大祐" || Program.loginname == "石川　尚吾")
+            {
+                comboBox1.Items.Add("固定給一覧");
+                comboBox1.Items.Add("固定給平均_組織現場雇用役職別");
+            }
+
+            if (Program.loginname == "喜屋武　大祐" || Program.loginname == "石川　尚吾" || Program.loginname == "長山　友恵")
+            {
+                comboBox1.Items.Add("【TEST】指定管理人件費");
+                comboBox1.Items.Add("【TEST】指定管理人件費_現場別");
+            }
+
+            comboBox1.Items.Add("【情報と鰓】端末保管中と退職済");
+            comboBox1.Items.Add("【鰓】担当テーブル名称不一致");
+
+            if (Program.loginname == "喜屋武　大祐" || Program.loginname == "高江洲　華子")
+            {
+
+                comboBox1.Items.Add("【エラー】課税区分該当だけど障害情報無");
+                comboBox1.Items.Add("【情報】次月以降固定給変更一覧");
+            }
+            
+
+            //有給処理最新処理月取得
+            DataTable kizyun = new DataTable();
+            kizyun = Com.GetDB("select max(付与開始日) as 最新付与開始日 from QUATRO.dbo.NKTTKYUKAF ");
+            date = Convert.ToDateTime(kizyun.Rows[0]["最新付与開始日"].ToString());
+
+            //年休一覧用コンボボックス
+            comboBox3.Items.Add("");
+            DataTable tantoubusyo = new DataTable();
+            tantoubusyo = Com.GetDB("select distinct 担当区分 from dbo.担当テーブル ");
+            foreach (DataRow row in tantoubusyo.Rows)
+            {
+                comboBox3.Items.Add(row["担当区分"].ToString());
+            }
+
+            flg = true;
+            comboBox3.SelectedIndex = 0;
+
+            treeView1.Nodes.Add("0_会計関連");
+            treeView1.Nodes[0].ImageIndex = 0;
+            treeView1.Nodes[0].Nodes.Add("01_現会計検索");
+            treeView1.Nodes[0].Nodes[0].ToolTipText = "2013年4月～";
+            treeView1.Nodes[0].Nodes.Add("02_旧会計検索");
+            treeView1.Nodes[0].Nodes[1].ToolTipText = "2005年4月～2013年3月";
+            treeView1.Nodes[0].Nodes.Add("03_科目別損益");
+            treeView1.Nodes[0].Nodes.Add("04_現場別損益");
+            treeView1.Nodes[0].Nodes.Add("05_会計チェック");
+
+            //treeView1.Nodes[0].Nodes.Add("Ｇコード登録");
+
+            treeView1.Nodes.Add("1_売上関連");
+            treeView1.Nodes[1].ImageIndex = 1;
+            treeView1.Nodes[1].Nodes.Add("11_現売上検索");
+            treeView1.Nodes[1].Nodes[0].ToolTipText = "2013年1月～";
+            treeView1.Nodes[1].Nodes.Add("12_旧売上検索");
+            treeView1.Nodes[1].Nodes[1].ToolTipText = "2005年8月～2012年12月";
+            treeView1.Nodes[1].Nodes.Add("13_契約一覧");
+            treeView1.Nodes[1].Nodes.Add("14_業務管理台帳");
+            treeView1.Nodes[1].Nodes.Add("15_計数管理台帳");
+            treeView1.Nodes[1].Nodes.Add("16_口座入出金");
+            //treeView1.Nodes[1].Nodes.Add("売上契約");
+            //treeView1.Nodes[1].Nodes[2].ToolTipText = "'18年08月現在 実装中";
+            //treeView1.Nodes[1].Nodes.Add("入力エラー表示");
+
+            treeView1.Nodes.Add("2_人事関連");
+            treeView1.Nodes[2].Nodes.Add("21_従業員検索");
+
+            treeView1.Nodes[2].Nodes.Add("22_資格検索");
+            treeView1.Nodes[2].Nodes.Add("23_研修登録・更新");
+            //treeView1.Nodes[2].Nodes.Add("研修検索");
+
+            treeView1.Nodes.Add("3_給与関連");
+            treeView1.Nodes[3].ImageIndex = 2;
+            treeView1.Nodes[3].Nodes.Add("31_入社入力");
+            treeView1.Nodes[3].Nodes.Add("311_入社入力(2021年4月～)");
+            treeView1.Nodes[3].Nodes.Add("32_異動入力");
+            treeView1.Nodes[3].Nodes.Add("321_異動入力(2021年4月～)");
+            treeView1.Nodes[3].Nodes.Add("33_退職入力");
+            treeView1.Nodes[3].Nodes.Add("34_勤怠入力");
+            treeView1.Nodes[3].Nodes.Add("35_出向入力");
+            treeView1.Nodes[3].Nodes.Add("36_臨時手当入力");
+            treeView1.Nodes[3].Nodes.Add("37_控除入力");
+            treeView1.Nodes[3].Nodes.Add("38_給与明細表示");
+            treeView1.Nodes[3].Nodes[4].ToolTipText = "2012年～現在までの給与明細を閲覧可能です。";
+            treeView1.Nodes[3].Nodes.Add("39_チェックリスト");
+            treeView1.Nodes[3].Nodes.Add("40_勤怠検索");
+            treeView1.Nodes[3].Nodes.Add("41_有給年間取得状況一覧");
+            treeView1.Nodes[3].Nodes.Add("42_給与新基準_日給額");
+            treeView1.Nodes[3].Nodes.Add("43_給与計算画面");
+            treeView1.Nodes[3].Nodes.Add("44_給与計算後資料");
+            treeView1.Nodes[3].Nodes.Add("45_手当・控除入力");
+            //treeView1.Nodes[3].Nodes.Add("年調");
+
+            treeView1.Nodes.Add("5_計数関連");
+            treeView1.Nodes[4].ImageIndex = 3;
+            treeView1.Nodes[4].Nodes.Add("51_現場計数");
+            treeView1.Nodes[4].Nodes.Add("52_現場計数(目論見/前年込)");
+            treeView1.Nodes[4].Nodes.Add("53_売上グラフ");
+
+            treeView1.Nodes.Add("6_庶務関連");
+            treeView1.Nodes[5].Nodes.Add("61_過去稟議(～2020年8月末)");
+            treeView1.Nodes[5].Nodes.Add("62_rakumo ワークフロー 運用画面");
+            //treeView1.Nodes[5].Nodes.Add("事業登録一覧");
+            treeView1.Nodes[5].Nodes.Add("63_事業登録・ビル管登録一覧");
+            treeView1.Nodes[5].Nodes[2].Nodes.Add("631_事業登録・ビル管登録一覧");
+            treeView1.Nodes[5].Nodes[2].Nodes.Add("632_ビル管登録現場_更新");
+            treeView1.Nodes[5].Nodes[2].Nodes.Add("633_ビル管登録現場_一覧");
+
+            //treeView1.Nodes[5].Nodes[2].Nodes.Add("特定建築物_様式");
+            //treeView1.Nodes[5].Nodes.Add("64_通勤管理");
+            treeView1.Nodes[5].Nodes.Add("64_通勤管理");
+            treeView1.Nodes[5].Nodes.Add("65_事故・クレーム管理台帳");
+            treeView1.Nodes[5].Nodes.Add("66_ハードソフト情報管理");
+            treeView1.Nodes[5].Nodes.Add("通勤手当改定シミュ");
+            //TODO 追加削除したらnode番号変更する必要あり！！！！
+            //treeView1.Nodes[5].Nodes[0].ForeColor = Color.DarkSeaGreen;
+            //treeView1.Nodes[5].Nodes[1].NodeFont = new Font("Arial", 14);
+            //treeView1.Nodes[5].Nodes[2].ForeColor = Color.CadetBlue;
+            //treeView1.Nodes[5].Nodes[3].ForeColor = Color.MediumVioletRed;
+
+            treeView1.Nodes.Add("8_リンク");
+            treeView1.Nodes[6].Nodes.Add("81_標準書式");
+            treeView1.Nodes[6].Nodes.Add("82_諸規程集");
+            //treeView1.Nodes[6].Nodes.Add("内線一覧");
+            //treeView1.Nodes[6].Nodes.Add("浦添座席");
+            //treeView1.Nodes[6].Nodes.Add("社内掲示板");
+            //treeView1.Nodes[6].Nodes.Add("ダイケンHP");
+            treeView1.Nodes[6].Nodes.Add("83_GSuite GMail");
+            treeView1.Nodes[6].Nodes.Add("84_GSuite カレンダー");
+            treeView1.Nodes[6].Nodes.Add("85_rakumo");
+            treeView1.Nodes[6].Nodes.Add("86_rakumo サポートサイト");
+            treeView1.Nodes[6].Nodes.Add("87_rakumo 管理者画面");
+            // treeView1.Nodes[6].Nodes.Add("TeamViewer");
+            //treeView1.Nodes.Add("その他");
+            //treeView1.Nodes[7].Nodes.Add("テスト中");
+            //treeView1.Nodes.Add("その他");
+            //treeView1.Nodes[7].ImageIndex = 4;
+            //treeView1.Nodes[8].Nodes.Add("管理者画面");
+
+
+
+            if (Program.loginname == "喜屋武　大祐")
+            {
+                treeView1.Nodes.Add("9_システム管理");
+                treeView1.Nodes[7].ImageIndex = 4;
+                treeView1.Nodes[7].Nodes.Add("91_高齢契約情報管理");
+                treeView1.Nodes[7].Nodes.Add("92_端末管理テーブル設定");
+                treeView1.Nodes[7].Nodes.Add("93_区分管理_資格登録情報");
+                treeView1.Nodes[7].Nodes.Add("94_ファイルサーバーログ");
+                treeView1.Nodes[7].Nodes.Add("95_担当テーブル設定");
+                treeView1.Nodes[7].Nodes.Add("96_更新履歴設定");
+                treeView1.Nodes[7].Nodes.Add("目論見更新");
+                treeView1.Nodes[7].Nodes.Add("組織別現場別_月");
+                treeView1.Nodes[7].Nodes.Add("手当・控除入力2");
+                treeView1.Nodes[7].Nodes.Add("振替伝票");
+            }
+            //全てのノードを展開
+            treeView1.ExpandAll();
+
+            //自分自身のバージョン情報を取得する
+            System.Diagnostics.FileVersionInfo ver =
+                System.Diagnostics.FileVersionInfo.GetVersionInfo(
+                System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+            GetCombo();
+
+            SetAppVer();
+
+            foreach (DataRow drw in Program.acdt.Rows)
+            {
+                comboBox2.Items.Add(drw["名前"].ToString());
+            }
+
+            comboBox2.SelectedItem = Program.loginname;
+
+            //TODO 切替後がどうなるか。。
+            if (Program.loginname != "喜屋武　大祐") comboBox2.Enabled = false;
+        }
+
+        private void GetCombo()
+        {
+            // Random クラスの新しいインスタンスを生成する
+            Random cRandom = new System.Random();
+
+            //コンボボックス設定
+            comboBox1.SelectedIndex = cRandom.Next(comboBox1.Items.Count - 6);
+
+        }
+
+
+        private void SetAppVer()
+        {
+            //初期値
+            string ver = "ver:ClickOnceバージョン";
+            string update_date = "最終更新日:ClickOnce最終更新日";
+            //現在のアプリケーションが ClickOnce アプリケーションかチェック
+            //デバッグ時に呼び出すと例外になっちゃうので・・・。
+            if (ApplicationDeployment.IsNetworkDeployed)
+            {
+                ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
+                //**バージョン取得
+                ver = "ver:" + ad.CurrentVersion.ToString();
+                //**最終更新日取得
+                update_date = "最終更新日:" + ad.TimeOfLastUpdateCheck.ToLongDateString().ToString();
+            }
+
+            //結果の表示
+            label2.Text = ver;
+            label3.Text = update_date;
+        }
+
+        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            //子ノードがあれば対象外
+            if (treeView1.SelectedNode.GetNodeCount(true) > 0) return;
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            switch (treeView1.SelectedNode.Text)
+            {
+                case "01_現会計検索": Kaikei nk = new Kaikei(); nk.Show(); return;
+                case "02_旧会計検索": KakoKaikei kk = new KakoKaikei(); kk.Show(); return;
+                case "03_科目別損益": Kamoku kamo = new Kamoku(); kamo.Show(); return;
+                case "04_現場別損益": Kanri kanr = new Kanri(); kanr.Show(); return;
+                case "05_会計チェック": KaikeiCheck kaic = new KaikeiCheck(); kaic.Show(); return;
+                //case "摘要修正": keiri kri = new keiri(); kri.Show(); return;
+                //case "入力エラー表示": ErrorCheck ec = new ErrorCheck(); ec.Show(); return;
+                //case "期限リスト": TermList el = new TermList(); el.Show(); return;　//間違い
+
+                //case "組織別_月": Kanri2 kanr2 = new Kanri2(); kanr2.Show(); return;
+                //case "部門別_月": Kanri3 kanr3 = new Kanri3(); kanr3.Show(); return;
+                //case "組織別現場別_年": Kanriy kanry = new Kanriy(); kanry.Show(); return;
+                //case "組織別_年": Kanriy2 kanry2 = new Kanriy2(); kanry2.Show(); return;
+                //case "部門別_年": Kanriy3 kanry3 = new Kanriy3(); kanry3.Show(); return;
+
+                case "11_現売上検索": Uriage nu = new Uriage(); nu.Show(); return;
+                case "12_旧売上検索": kakouriage ku = new kakouriage(); ku.Show(); return;
+                case "13_契約一覧": KeiyakuList keil = new KeiyakuList(); keil.Show(); return;
+                case "14_業務管理台帳": GyoumuKanri gyoukan = new GyoumuKanri(); gyoukan.Show(); return;
+                case "15_計数管理台帳": KeisuuKanri KeisuuK = new KeisuuKanri(); KeisuuK.Show(); return;
+                case "16_口座入出金": Kouza kz = new Kouza(); kz.Show(); return;
+                case "売上契約": UriageKeiyaku urikei = new UriageKeiyaku(); urikei.Show(); return;
+
+                case "21_従業員検索": Emp emp = new Emp(); emp.Show(); return;
+                case "22_資格検索": shikaku sk = new shikaku(); sk.Show(); return;
+                case "23_研修登録・更新": Kensyuu ks = new Kensyuu(); ks.Show(); return;
+                case "研修検索": Semi semi = new Semi(); semi.Show(); return;
+
+                case "31_入社入力": Nyuusya49 ny49 = new Nyuusya49(); ny49.Show(); return;
+                case "311_入社入力(2021年4月～)": Nyuusya ny = new Nyuusya(); ny.Show(); return;
+                case "32_異動入力": GenpyouNo gpNo = new GenpyouNo(); gpNo.Show(); return;
+                case "321_異動入力(2021年4月～)": Genpyou gp = new Genpyou(); gp.Show(); return;
+                case "33_退職入力": Taisya ta = new Taisya(); ta.Show(); return;
+                case "34_勤怠入力": Client cl = new Client(Program.loginID); cl.Show(); return;
+                case "35_出向入力": Furikae Furikae = new Furikae(); Furikae.Show(); return;
+                case "36_臨時手当入力": Rinziteate Rteate = new Rinziteate(); Rteate.Show(); return;
+                case "38_給与明細表示": KMeisai km = new KMeisai(); km.Show(); return;
+                case "39_チェックリスト": CheckList CheckList = new CheckList(); CheckList.Show(); return;
+                case "40_勤怠検索": KintaiCK kck = new KintaiCK(); kck.Show(); return;
+                case "41_有給年間取得状況一覧": YuuKyuu yuku = new YuuKyuu(); yuku.Show(); return;
+                case "42_給与新基準_日給額": Nikkyu nikkyu = new Nikkyu(); nikkyu.Show(); return;
+                case "43_給与計算画面": ZeeMEC zmec = new ZeeMEC(); zmec.Show(); return;
+                case "44_給与計算後資料": AfterCalc ac = new AfterCalc(); ac.Show(); return;
+                case "45_手当・控除入力": ZigyouUp zig = new ZigyouUp(); zig.Show(); return;
+                //case "退職過去検索": TData TData = new TData(); TData.Show(); return;
+                //case "年調": Nenchou na = new Nenchou(); na.Show(); return;
+
+
+                case "51_現場計数": GKS2020 gks2020 = new GKS2020(); gks2020.Show(); return;
+                case "52_現場計数(目論見/前年込)": GK2020 gk2020 = new GK2020(); gk2020.Show(); return;
+                case "53_売上グラフ": graph gr = new graph(); gr.Show(); return;
+                //case "現場計数": GKS gks = new GKS(); gks.Show(); return;
+                //case "現場計数(目論見/前年込)": GK gk = new GK(); gk.Show(); return;
+                //case "現場計数(Goya仕様)": GoyaK goyak = new GoyaK(); goyak.Show(); return;
+                //case "コロナ計数": Corona coro = new Corona(); coro.Show(); return;
+                //case "現場計数(Goya仕様)": GoyaK2020 goyak2020 = new GoyaK2020(); goyak2020.Show(); return;
+
+                case "61_過去稟議(～2020年8月末)": Ringi rin = new Ringi(); rin.Show(); return;
+                case "62_rakumo ワークフロー 運用画面": System.Diagnostics.Process.Start(@"https://a-rakumo.appspot.com/workflow/admin"); return;
+                case "63_事業登録一覧":
+
+                    string pass = @"\\192.168.100.11\21_全体共通\40_総務発信_管理\ODIS\doc\事業登録一覧表.xlsx";
+
+                    DataTable dt = new DataTable();
+                    dt = Com.GetDB("select Convert(int,社員番号), 漢字氏名, 地区名, 組織名, 現場名, 給与支給名称, 役職名, 年齢, 在籍年月 from dbo.accessNew where 在籍区分 <> '9'");
+
+                    //手順1：新しいワークブックを作成します。
+                    C1XLBook c1XLBook1 = new C1XLBook();
+
+                    c1XLBook1.Load(pass);
+
+                    // 手順2：セルに値を挿入します。
+                    XLSheet sheet = c1XLBook1.Sheets["Data"];
+
+                    int rows = dt.Rows.Count;
+                    int cols = dt.Columns.Count;
+
+                    for (int i = 0; i < rows; i++)
+                    {
+                        for (int j = 0; j < cols; j++)
+                        {
+                            sheet[i, j].Value = dt.Rows[i][j];
+                        }
+                    }
+
+                    // 手順3：ファイルを保存します。
+                    c1XLBook1.Save(pass);
+
+                    System.Diagnostics.Process.Start(pass); return;
+                case "631_事業登録・ビル管登録一覧": ZigyouTouroku zt = new ZigyouTouroku(); zt.Show(); return;
+                case "632_ビル管登録現場_更新": BillKan bk = new BillKan(); bk.Show(); return;
+                case "633_ビル管登録現場_一覧": BillKan_list bk_list = new BillKan_list(); bk_list.Show(); return;
+                //case "特定建築物_様式": System.Diagnostics.Process.Start(@"\\192.168.100.11\21_全体共通\10_標準書式\60_法令関連\10_特定建築物\"); return;
+                
+                case "64_通勤管理": Scramble sc = new Scramble(); sc.Show(); return;
+                //case "64_通勤管理": Scramble scb = new Scramble(); scb.Show(); return;
+                case "65_事故・クレーム管理台帳": Report re = new Report(); re.Show(); return;
+                case "66_ハードソフト情報管理": HardSoft haso = new HardSoft(); haso.Show(); return;
+                case "通勤手当改定シミュ": Form1 fm1 = new Form1(); fm1.Show(); return;
+
+                case "81_標準書式": System.Diagnostics.Process.Start(@"\\192.168.100.11\21_全体共通\10_標準書式\標準書式一覧.xlsx"); return;
+                case "82_諸規程集": System.Diagnostics.Process.Start(@"\\192.168.100.11\21_全体共通\40_総務発信_管理\諸規程集\要項及び諸規程運用状況一覧.xlsx"); return;
+                case "83_GSuite GMail": System.Diagnostics.Process.Start(@"https://mail.google.com/a/oki-daiken.co.jp"); return;
+                case "84_GSuite カレンダー": System.Diagnostics.Process.Start(@"https://calendar.google.com/a/oki-daiken.co.jp"); return;
+                case "85_rakumo": System.Diagnostics.Process.Start(@"https://a-rakumo.appspot.com"); return;
+                case "86_rakumo サポートサイト": System.Diagnostics.Process.Start(@"https://support.rakumo.com/rakumo-support/"); return;
+                case "87_rakumo 管理者画面": System.Diagnostics.Process.Start(@"https://a-rakumo.appspot.com/admin/"); return;
+                //case "内線一覧": System.Diagnostics.Process.Start(@"\\192.168.100.11\21_全体共通\20_掲示板\内線_座席\内線一覧.xls"); return;
+                //case "浦添座席": System.Diagnostics.Process.Start(@"\\192.168.100.11\21_全体共通\20_掲示板\内線_座席\座席一覧.xls"); return;
+                //case "社内掲示板": System.Diagnostics.Process.Start(@"https://sites.google.com/a/oki-daiken.co.jp/portal2018/"); return;
+                //case "ダイケンHP": System.Diagnostics.Process.Start(@"http://www.oki-daiken.co.jp/"); return;
+                //case "GSuite アプリ一覧": System.Diagnostics.Process.Start(@"chrome://apps"); return;
+
+                case "91_高齢契約情報管理": Kourei kourei = new Kourei(); kourei.Show(); return;
+                case "92_端末管理テーブル設定": TanmatsuK tankan = new TanmatsuK(); tankan.Show(); return;
+                case "93_区分管理_資格登録情報": KubunKanri_Shikaku kubun_shikaku = new KubunKanri_Shikaku(); kubun_shikaku.Show(); return;
+                case "94_ファイルサーバーログ": FSLog fsl = new FSLog(); fsl.Show(); return;
+                case "95_担当テーブル設定": TantouT tanT = new TantouT(); tanT.Show(); return;
+                case "96_更新履歴設定": UpdateHis Uph = new UpdateHis(); Uph.Show(); return;
+                case "目論見更新": Mokuromi moku = new Mokuromi(); moku.Show(); return;
+                case "手当・控除入力2": KouzyoRingi krin = new KouzyoRingi(); krin.Show(); return;
+                case "振替伝票": Denpyou denp = new Denpyou(); denp.Show(); return;
+
+                //case "TeamViewer": System.Diagnostics.Process.Start(@"https://898.tv/oki-daiken-qs"); return;
+                //case "自動": Auto auto = new Auto(); auto.Show(); return;
+                //case "管理者画面": Administrator ad = new Administrator(); ad.Show(); return;
+
+
+
+                
+                
+                
+                //case "pivot": pivot pivot = new pivot(); pivot.Show(); return;
+                //case "エンジ用(臨時目標、収支目論見)": Eng eng = new Eng(); eng.Show(); return;
+                //case "テスト中": etc etc = new etc(); etc.Show(); return;
+
+                default: break;
+            }
+
+            Cursor.Current = Cursors.Default;
+        }
+
+
+
+
+
+
+        private void Main_Shown(object sender, EventArgs e)
+        {
+            //dataGridView1.CurrentCell = null;
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GetComboData();
+        }
+
+        private void GetComboData()
+        {
+            //コンボボックス無効化・カーソル変更
+            comboBox1.Enabled = false;
+            Cursor.Current = Cursors.WaitCursor;
+
+            dataGridView1.DataSource = null;
+            dt2.Clear();
+
+            //隠す
+            tableLayoutPanel1.Visible = false;
+            comboBox3.Visible = false;
+            textBox1.Visible = false;
+            button1.Visible = false;
+
+            //有給使用変数
+            string year;
+            string month;
+            string year_nx;
+            string month_nx;
+            string taisyoku;
+            year = date.Year.ToString();//2019
+            month = date.ToString("MM");//01
+            year_nx = date.AddMonths(1).Year.ToString();//2019
+            month_nx = date.AddMonths(1).ToString("MM");//02
+            taisyoku = date.AddMonths(-1).ToString("yyyy/MM/dd");// 2018/12/01
+
+            string month_ex;
+            month_ex = date.AddMonths(-1).Month.ToString();
+
+            string res = textBox1.Text.Trim().Replace("　", " ");
+            string[] ar = res.Split(' ');
+
+            string result = "";
+            if (ar[0] != "")
+            {
+                foreach (string s in ar)
+                {
+                    result += " and (reskey like '%" + s + "%' or reskey like '%" + Com.isOneByteChar(s) + "%' or reskey like '%" + Microsoft.VisualBasic.Strings.StrConv(s, VbStrConv.Katakana) + "%' or reskey like '%" + Com.isOneByteChar(Microsoft.VisualBasic.Strings.StrConv(s, VbStrConv.Katakana)) + "%' or reskey like '%" + Microsoft.VisualBasic.Strings.StrConv(s, VbStrConv.Hiragana) + "%' or reskey like '%" + Microsoft.VisualBasic.Strings.StrConv(Com.isOneByteChar(s), VbStrConv.Hiragana) + "%')";
+                }
+            }
+
+            switch (comboBox1.SelectedItem.ToString())
+            {
+                //2019/01/01
+                case "【情報】操作履歴":
+                    dt = Com.GetDB("select CONVERT(varchar,日時,111) as 日時, convert(char(8),日時,108) as 時刻, 機能, 名前, 検索結果, 検索条件 from dbo.GetHistory");
+                    break;
+                case "【情報】更新履歴":
+                    dt = Com.GetDB("select * from dbo.更新履歴 order by 更新日時 desc");
+                    break;
+                case "【警告】事業登録 有効期限間近順":
+                    dt = Com.GetDB("select * from dbo.z事業登録情報 order by 有効期限");
+                    break;
+                case "【情報】従業員誕生日　直近一週間":
+                    //DateTime.Today.ToString().Substring(5, 5) 
+                    if (DateTime.Today.Month.ToString() == "12" && DateTime.Today.AddDays(7).Month.ToString() == "1")
+                    {
+                        dt = Com.GetDB("select * from [誕生日取得_年跨ぎ前] order by 誕生日");
+                        dt2 = Com.GetDB("select * from [誕生日取得_年跨ぎ後] order by 誕生日");
+
+                        dt.Merge(dt2);
+                    }
+                    else
+                    {
+                        dt = Com.GetDB("select * from 誕生日取得 order by 誕生日");
+                    }
+                    break;
+                case "【警告】従業員定年日　間近順":
+                    dt = Com.GetDB("select * from dbo.定年情報  order by 定年日");
+                    break;
+                case "【警告】高齢契約終了日　間近順":
+                    dt = Com.GetDB("select * from 高齢契約情報取得 order by 契約終了日");
+                    break;
+                case "【警告】試用期間中従業員":
+                    dt = Com.GetDB("select * from dbo.試用期間中一覧 order by 経過日数 desc");
+                    break;
+                case "【エラー】免許・登録・扶養手当不一致":
+                    dt = Com.GetDB("select * from m免許手当不一致 union all select * from t登録手当不一致 union all select * from h扶養手当不一致");
+                    break;
+                case "【情報】免許手当例外一覧":
+                    dt = Com.GetDB("select * from dbo.免許手当例外一覧");
+                    break;
+                case "【情報】免許(資格)・登録手当一覧":
+                    dt = Com.GetDB("select * from dbo.[m免許(資格)・登録手当一覧] order by ID, 連番");
+                    break;
+                case "【情報】雇用保険と所定労働日数":
+                    dt = Com.GetDB("select * from dbo.k雇用保険と所定労働日数");
+                    break;
+                    
+                case "【情報】通信手当一覧":
+                    TargetDays tday = new TargetDays();
+
+                    //string select = "select b.社員番号, b.氏名, b.地区名, b.組織名, b.現場名, a.金額 as 手当額, c.金額 as [ZeeM臨時作業手当設定額" + tday.StartYMD.AddMonths(1).ToString("yy年M月給与") + "], a.備考 as 携帯番号, b.退職年月日 ";
+                    //string from = "from dbo.通信手当 a left join dbo.社員基本情報 b on a.社員番号 = b.社員番号 left join QUATRO.dbo.QCTTKINGKH c on a.社員番号 = c.社員番号 and c.処理年 = '" + tday.StartYMD.AddMonths(1).Year.ToString() + "' and c.処理月 = '" + tday.StartYMD.AddMonths(1).ToString("MM") + "' and c.項目ＩＤ = 'A7900' order by 地区CD, 組織CD, 現場CD";
+
+                    string select = "select b.社員番号, b.氏名, b.地区名, b.組織名, b.現場名, タイプ as 手当額, c.金額 as [ZeeM臨時作業手当設定額" + tday.StartYMD.AddMonths(1).ToString("yy年M月給与") + "], a.PC名電番Mail as 携帯番号, a.備考, case when a.組織CD <> b.組織CD or a.現場CD <> b.現場CD then '組織or現場相違' when PC名電番Mail is null or PC名電番Mail = '' then '要電番確認' else '' end as チェック, b.退職年月日 as 退職チェック  ";
+                    string from = "from dbo.端末管理テーブル a left join dbo.社員基本情報 b on a.社員番号 = b.社員番号 left join QUATRO.dbo.QCTTKINGKH c on a.社員番号 = c.社員番号 and c.処理年 = '" + tday.StartYMD.AddMonths(1).Year.ToString() + "' and c.処理月 = '" + tday.StartYMD.AddMonths(1).ToString("MM") + "' and c.項目ＩＤ = 'A7900' where 使用区分 = '私物' order by 地区CD, b.組織CD, b.現場CD";
+
+
+                    dt = Com.GetDB(select + from);
+
+
+                    break;
+                case "【エラー】通勤管理エラー一覧":
+                    dt = Com.GetDB("select * from dbo.t通勤管理エラー一覧取得 ");
+                    break;
+                    
+                case "【エラー】資格有効期限切れor未入力":
+                    dt = Com.GetDB("select * from dbo.[s資格有効期限切れor未入力] ");
+                    break;
+                case "【エラー】人事情報エラーチェック結果":
+                    dt = Com.GetDB("select * from dbo.[z人事情報チェック結果] ");
+                    break;
+                case "計数(仮)":
+                    //プロステージからデータをとってくる
+                    DataTable dttemp = new DataTable();
+                    dttemp = Com.GetPosDB("select ym,bumoncode, koujicode, sum(売上) 売上, sum(諸経費) 諸経費 from kpcp01.uriagesyokeihi('202007') group by ym, bumoncode, koujicode");
+
+                    //一旦データ削除
+                    DataTable dtr = new DataTable();
+                    dtr = Com.GetDB("delete from 売上と経費 where 年月 = '202007'");
+
+                    //ZeeMDBにインサート
+                    SqlConnection Cn;
+                    SqlCommand Cmd;
+
+                    try
+                    {
+                        using (Cn = new SqlConnection(ODIS.Com.SQLConstr))
+                        {
+                            Cn.Open();
+                            using (Cmd = Cn.CreateCommand())
+                            {
+                                using (SqlBulkCopy bulkcopy = new SqlBulkCopy(Cn))
+                                {
+                                    bulkcopy.BulkCopyTimeout = 660;
+                                    bulkcopy.DestinationTableName = "売上と経費";
+                                    bulkcopy.WriteToServer(dttemp);
+                                    bulkcopy.Close();
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("エラー" + ex.ToString());
+                        throw;
+                    }
+
+                    dt = Com.GetDB("select * from dbo.新計数仮 order by 組織CD, 現場CD");
+                    break;
+
+                case "【情報】有休残日数一覧":
+
+                    //コンボボックス対応
+                    comboBox3.Visible = true;
+                    textBox1.Visible = true;
+                    button1.Visible = true;
+
+                    dt = Com.GetDB("select * from dbo.[年休残日数一覧]('" + year + "', '" + month + "', '" + year_nx + "', '" + month_nx + "', '" + taisyoku + "') where 担当区分 like '%" + comboBox3.SelectedItem.ToString() + "%' " + result);
+                    dt.Columns["当月/1残数"].ColumnName = month_ex + "/1残数";
+                    dt.Columns["当月使用数"].ColumnName = month_ex + "月使用数";
+                    dt.Columns["当月末残数"].ColumnName = month_ex + "月末残数";
+                    dt.Columns["当月末残内訳_前々回分"].ColumnName = month_ex + "月末残内訳_前々回分";
+                    dt.Columns["当月末残内訳_前回分"].ColumnName = month_ex + "月末残内訳_前回分";
+                    dt.Columns["当月末年休使用状況_前々回+前回付与数"].ColumnName = month_ex + "月末_前々回+前回付与数";
+                    dt.Columns["当月末年休使用状況_前回付与後使用数"].ColumnName = month_ex + "月末_前回付与後使用数";
+                    dt.Columns["当月末年休使用状況_消化率"].ColumnName = month_ex + "月末消化率";
+                    dt.Columns["当月/31消滅"].ColumnName = month_ex + "/31消滅";
+                    dt.Columns["次月/1付与"].ColumnName = date.Month.ToString() + "/1付与";
+                    dt.Columns["次月/1残数"].ColumnName = date.Month.ToString() + "/1残数";
+                    break;
+
+                case "【エラー】未発令一覧":
+                    dt = Com.GetDB("select * from dbo.[未発令一覧] ");
+                    break;
+
+                case "【情報】回数1項目一覧":
+                    dt = Com.GetDB("select * from dbo.[k回数1項目一覧] order by 項目名");
+                    break;
+
+                //case "固定控除一覧表示":
+                //    if (Program.loginname == "石川　尚吾" || Program.loginname == "喜屋武　大祐")
+                //    {
+                //        dt = Com.GetDB("select * from dbo.[固定控除一覧表示] order by 内容, 地区名, 組織名, 現場名");
+                //    }
+                //    else
+                //    {
+                //        dt = Com.GetDB("select * from dbo.[固定控除一覧表示] where 内容 not like '2%' order by 内容, 地区名, 組織名, 現場名");
+                //    }
+                //    break;
+                case "【情報】勤怠入力_入力状況一覧":
+                    //全対象者データ取得
+                    DataTable dtall = co.GetKintaiKihon(1, "");
+
+                    //担当別データ
+                    DataTable list = co.GetKintaiKihon(9, "");
+
+                    //エラー数と警告数を取得しリストに表示
+                    foreach (DataRow dr in list.Rows)
+                    {
+                        string filtStr = "担当管理 = '" + dr["担当"].ToString() + "' and 登録フラグ = '1'";
+                        DataRow[] drYae = dtall.Select(filtStr, "");
+
+
+                        int errorCt = 0;  //エラー件数
+                        int emergCt = 0; //警告件数
+
+                        foreach (DataRow row in drYae)
+                        {
+                            string[] st = co.ErrorCheck(row, "");
+
+                            if (st[0].Length > 0)
+                            {
+                                errorCt++;
+                            }
+
+                            if (st[4].Length > 0)
+                            {
+                                emergCt++;
+                            }
+                        }
+
+                        foreach (DataRow d in list.Rows)
+                        {
+                            if (d[1].ToString() == dr["担当"].ToString())
+                            {
+                                d["エラー"] = errorCt.ToString();
+                                d["警告"] = emergCt.ToString();
+                            }
+                        }
+                    }
+
+                    dt = list;
+                    break;
+                case "【情報】勤怠入力_警告一覧":
+                    //全対象者データ取得
+                    DataTable dtall2 = co.GetKintaiKihon(1, "");
+
+                    DataRow[] drYae2 = dtall2.Select("登録フラグ = '1'", "現場CD");
+
+                    DataTable Disp = new DataTable();
+                    Disp.Columns.Add("社員番号", typeof(string));
+                    Disp.Columns.Add("漢字氏名", typeof(string));
+                    Disp.Columns.Add("組織名", typeof(string));
+                    Disp.Columns.Add("現場名", typeof(string));
+                    Disp.Columns.Add("担当管理", typeof(string));
+                    Disp.Columns.Add("状況", typeof(string));
+                    Disp.Columns.Add("休日超過理由", typeof(string));
+                    Disp.Columns.Add("出勤超過理由", typeof(string));
+                    Disp.Columns.Add("メモ", typeof(string));
+
+                    foreach (DataRow row in drYae2)
+                    {
+                        string[] st = co.ErrorCheck(row, "");
+                        if (st[4].Length > 0 || row["休日超過理由"].ToString().Length > 0 || row["出勤超過理由"].ToString().Length > 0 || row["コメント"].ToString().Length > 0)
+                        {
+                            DataRow nr = Disp.NewRow();
+                            nr["社員番号"] = row["社員番号"];
+                            nr["漢字氏名"] = row["漢字氏名"];
+                            nr["組織名"] = row["組織名"];
+                            nr["現場名"] = row["現場名"];
+                            nr["担当管理"] = row["担当管理"];
+                            nr["状況"] = st[4].ToString();
+                            nr["休日超過理由"] = row["休日超過理由"];
+                            nr["出勤超過理由"] = row["出勤超過理由"];
+                            nr["メモ"] = row["コメント"];
+                            Disp.Rows.Add(nr);
+                        }
+                    }
+
+                    dt = Disp;
+                    break;
+                //case "問合一覧表示":
+                //    dt = Com.GetDB("select * from dbo.問合管理");
+                //    break;
+
+                case "基準不明確手当一覧":
+                    dt = Com.GetDB("select * from dbo.[t調整と特別と現場と出向] ");
+                    break;
+                //case "職種設定情報(月給・日給)":
+                //    dt = Com.GetDB("select * from dbo.職種設定表示");
+                //    break;
+                case "【情報】正社員雇用変更一覧(2015/01/01～)":
+                    dt = Com.GetDB("select * from dbo.[雇用体系変更一覧] order by 発令日 desc");
+                    break;
+
+                case "【情報】休業手当":
+                    string sql = "select * from dbo.休業手当表示まとめ where ";
+
+                    if (Program.loginname == "親泊　美和子")
+                    {
+                        sql = sql + "担当区分  in ('施設', 'エンジ') ";
+                    }
+                    else if (Program.loginname == "金城　智之")
+                    {
+                        sql = sql + "担当区分  = '管理事務' ";
+                    }
+                    //else if (Program.loginname == "大浜　綾希子" || Program.loginname == "山城　さとみ")
+                    //{
+                    //    sql = sql + "更新者 in ('大浜　綾希子', '山城　さとみ') ";
+                    //}
+                    else if (Program.loginname == "大浜　綾希子")
+                    {
+                        sql = sql + "担当区分  in ('現業', '客室') ";
+                    }
+                    else
+                    {
+                        sql = sql + "担当区分  like '%" + Program.loginbusyo + "%'";
+                    }
+
+                    dt = Com.GetDB(sql + "order by 組織CD, 現場CD");
+                    break;
+                case "【情報】休業手当_組織現場集計":
+                    dt = Com.GetDB("select * from dbo.休業手当表示_組織別現場別");
+                    break;
+                case "【情報】休業申請_雇保加入":
+                    dt = Com.GetDB("select * from dbo.休業手当_雇用保険加入 order by 組織CD, 現場CD, カナ氏名");
+                    break;
+                case "【情報】休業申請_雇保未加入":
+                    dt = Com.GetDB("select * from dbo.休業手当_雇用保険未加入 order by 組織CD, 現場CD, カナ氏名");
+                    break;
+                case "異動入力で登録された家族情報":
+                    dt = Com.GetDB("select * from QUATRO.dbo.SJMTKAZOKU where 個人識別ＩＤ = '' ");
+                    break;
+                case "固定給一覧":
+                    dt = Com.GetDB("select * from dbo.社員基本情報 a left join dbo.k固定給一覧 b on a.社員番号 = b.社員番号 where 在籍区分 <> '9' and 給与支給区分 not in ('A1','B1')");
+                    break;
+                case "固定給平均_組織現場雇用役職別":
+                    dt = Com.GetDB("select * from dbo.固定給平均_組織現場雇用役職別");
+                    break;
+                //case "【TEST】指定管理人件費":
+                //    dt = Com.GetDB("select * from dbo.指定管理人件費");
+                //    break;
+                //case "【TEST】指定管理人件費_現場別":
+                //    dt = Com.GetDB("select * from dbo.指定管理人件費_現場別");
+                //    break;
+                case "【情報と鰓】端末保管中と退職済":
+                    dt = Com.GetDB("select * from dbo.t端末保管中と退職済");
+                    break;
+                case "【エラー】課税区分該当だけど障害情報無":
+                    dt = Com.GetDB("select * from dbo.k課税区分該当だけど障害情報無");
+                    break;
+                case "【情報】次月以降固定給変更一覧":
+                    dt = Com.GetDB("select * from dbo.z次月以降固定給変更一覧");
+                    break;
+                case "【鰓】担当テーブル名称不一致":
+                    dt = Com.GetDB("select * from dbo.t担当テーブル名称不一致");
+                    break;
+                    
+            }
+
+
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+
+            dataGridView1.DataSource = dt;
+
+            DispChange();
+
+            //全て入力した後に列幅を自動調節する
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
+            //カーソル変更・メッセージキュー処理・コンボボックス有効化
+            Cursor.Current = Cursors.Default;
+            Application.DoEvents();
+            comboBox1.Enabled = true;
+
+            Com.InHistory(comboBox1.SelectedItem.ToString(), "", "");
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            foreach (DataRow row in Program.acdt.Rows)
+            {
+                if (row["名前"].ToString() == comboBox2.SelectedItem.ToString())
+                {
+                    Program.loginID = row["ID"].ToString();
+                    Program.access = row["権限"].ToString();
+                    Program.logintiku = row["地区"].ToString();
+                    Program.loginbusyo = row["部署"].ToString();
+                    Program.loginname = row["名前"].ToString();
+                    Program.dispZinzi = row["人事検索権限"].Equals(DBNull.Value) ? 0 : (int)row["人事検索権限"];
+                    Program.yakusyokucd = row["役職CD"].ToString();
+                }
+            }
+        }
+
+        private void DispChange()
+        {
+            if (dt.Rows.Count == 0) return;
+
+            if (comboBox1.SelectedItem.ToString() == "【エラー】免許・登録・扶養手当不一致")
+            {
+                dataGridView1.Columns[0].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[1].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[2].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            else if (comboBox1.SelectedItem.ToString() == "【情報】免許手当例外一覧")
+            {
+                dataGridView1.Columns[1].DefaultCellStyle.Format = "#,0";
+            }
+            else if (comboBox1.SelectedItem.ToString() == "【情報】免許(資格)・登録手当一覧")
+            {
+                dataGridView1.Columns[2].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[4].DefaultCellStyle.Format = "#,0";
+            }
+            //else if (comboBox1.SelectedItem.ToString() == "【情報】有給管理一覧(前回付与10日以上で年5日未取得の方)")
+            //{
+            //    dataGridView1.Columns[5].DefaultCellStyle.Format = "#,0";
+            //    dataGridView1.Columns[6].DefaultCellStyle.Format = "#,0";
+
+            //    dataGridView1.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            //    dataGridView1.Columns[6].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            //    dataGridView1.Columns["reskey"].Visible = false;
+            //}
+            else if (comboBox1.SelectedItem.ToString() == "【情報】有休残日数一覧")
+            {
+                dataGridView1.Columns[12].DefaultCellStyle.Format = "#,##0.#";
+                dataGridView1.Columns[13].DefaultCellStyle.Format = "#,##0.#";
+                dataGridView1.Columns[14].DefaultCellStyle.Format = "#,##0.#";
+                dataGridView1.Columns[15].DefaultCellStyle.Format = "#,##0.#";
+                dataGridView1.Columns[16].DefaultCellStyle.Format = "#,##0.#";
+                dataGridView1.Columns[17].DefaultCellStyle.Format = "#,##0.#";
+                dataGridView1.Columns[18].DefaultCellStyle.Format = "#,##0.#";
+                dataGridView1.Columns[19].DefaultCellStyle.Format = "0\'%\'";
+                dataGridView1.Columns[20].DefaultCellStyle.Format = "#,##0.#";
+                //dataGridView1.Columns[21].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[22].DefaultCellStyle.Format = "#,##0.#";
+                dataGridView1.Columns[23].DefaultCellStyle.Format = "#,##0.#";
+                dataGridView1.Columns[24].DefaultCellStyle.Format = "#,##0.#";
+                dataGridView1.Columns[25].DefaultCellStyle.Format = "#,##0.#";
+                dataGridView1.Columns[26].DefaultCellStyle.Format = "#,0";
+
+                dataGridView1.Columns[12].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[13].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[14].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[15].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[16].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[17].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[18].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[19].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[20].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                //dataGridView1.Columns[21].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[22].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[23].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[24].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[25].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[26].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+                if (Program.loginname == "石川　尚吾" || Program.loginname == "喜屋武　大祐")
+                {
+                }
+                else
+                {
+                    dataGridView1.Columns["時給"].Visible = false;
+                    dataGridView1.Columns["勤務時間"].Visible = false;
+                    dataGridView1.Columns["残数金額換算"].Visible = false;
+                }
+
+                dataGridView1.Columns["reskey"].Visible = false;
+            }
+            //else if (comboBox1.SelectedItem.ToString() == "固定控除一覧表示")
+            //{
+            //    dataGridView1.Columns[8].DefaultCellStyle.Format = "#,0";
+            //    dataGridView1.Columns[9].DefaultCellStyle.Format = "#,0";
+            //    dataGridView1.Columns[8].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            //    dataGridView1.Columns[9].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            //}
+            else if (comboBox1.SelectedItem.ToString() == "【情報】通信手当一覧")
+            {
+                dataGridView1.Columns[5].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[6].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[6].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            else if (comboBox1.SelectedItem.ToString() == "【情報】休業手当_組織現場集計")
+            {
+                dataGridView1.Columns[2].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[3].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[4].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[5].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[6].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[7].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[8].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[9].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[10].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[11].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[12].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[13].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[14].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[15].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[6].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[7].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[8].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[9].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[10].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[11].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[12].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[13].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[14].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[15].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            else if (comboBox1.SelectedItem.ToString() == "【情報】休業手当")
+            {
+                dataGridView1.Columns[08].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[09].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[10].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[11].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[12].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[13].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[14].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[15].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[16].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[17].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[18].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[19].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[20].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[21].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[22].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[23].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[24].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[25].DefaultCellStyle.Format = "#,0";
+                dataGridView1.Columns[08].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[09].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[10].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[11].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[12].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[13].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[14].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[15].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[16].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[17].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[18].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[19].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[20].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[21].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[22].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[23].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[24].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns[25].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            //else if (comboBox1.SelectedItem.ToString() == "【TEST】指定管理人件費")
+            //{
+            //    for (int i = 7; i <= 30; i++)
+            //    {
+            //        dataGridView1.Columns[i].DefaultCellStyle.Format = "#,0";
+            //        dataGridView1.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            //    }
+
+            //}
+            //else if (comboBox1.SelectedItem.ToString() == "【TEST】指定管理人件費_現場別")
+            //{
+            //    for (int i = 2; i <= 5; i++)
+            //    {
+            //        dataGridView1.Columns[i].DefaultCellStyle.Format = "#,0";
+            //        dataGridView1.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            //    }
+
+            //}
+            else if (comboBox1.SelectedItem.ToString() == "【情報】回数1項目一覧")
+            {
+                    dataGridView1.Columns[6].DefaultCellStyle.Format = "#,0";
+                    dataGridView1.Columns[6].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            
+
+
+
+        }
+
+        //private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        //{
+        //}
+        //CellFromatting からCellPaintingへ変更
+        private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (comboBox1.SelectedItem.ToString() == "【警告】高齢契約終了日　間近順")
+            {
+                //セルの列を確認
+                decimal val = 0;
+                //if (e.Value != null && e.ColumnIndex == 0 && decimal.TryParse(e.Value.ToString(), out val))
+                if (e.ColumnIndex == 0 && decimal.TryParse(e.Value.ToString(), out val))
+                {
+                    //セルの値により、背景色を変更する
+                    if (val <= 0 || e.Value.ToString() == "")
+                    {
+                        dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
+                    }
+                }
+                else if (e.ColumnIndex == 0 && e.Value.ToString() == "")
+                {
+                    dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
+                }
+            }
+            else if (comboBox1.SelectedItem.ToString() == "【情報】有休残日数一覧")
+            {
+                //セルの列を確認
+                decimal val = 0;
+                if (e.Value != null && e.ColumnIndex == 22 && decimal.TryParse(e.Value.ToString(), out val))
+                {
+                    //セルの値により、背景色を変更する
+                    if (val >= 0)
+                    {
+                        dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
+                    }
+                }
+            }
+            else if (comboBox1.SelectedItem.ToString() == "【警告】試用期間中従業員")
+            {
+                //セルの列を確認
+                decimal val = 0;
+                if (e.Value != null && e.ColumnIndex == 0 && decimal.TryParse(e.Value.ToString(), out val))
+                {
+                    //セルの値により、背景色を変更する
+                    if (val >= 180)
+                    {
+                        dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
+                    }
+                }
+            }
+            else if (comboBox1.SelectedItem.ToString() == "【警告】事業登録 有効期限間近順")
+            {
+                //セルの列を確認
+                decimal val = 0;
+                if (e.Value != null && e.ColumnIndex == 0 && decimal.TryParse(e.Value.ToString(), out val))
+                {
+                    //セルの値により、背景色を変更する
+                    if (val <= 0)
+                    {
+                        dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
+                    }
+                }
+            }
+            //else if (comboBox1.SelectedItem.ToString() == "有給管理一覧(前回付与10日以上で年5日未取得の方)")
+            //{
+            //    if (e.Value != null && e.ColumnIndex == 4)
+            //    {
+            //        //セルの値により、背景色を変更する
+
+            //        if (e.Value.ToString() == date.AddYears(-1).ToString("yyyy/MM/dd"))
+            //        {
+            //            dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGray;
+            //        }
+            //        else if (e.Value.ToString() == date.AddYears(-1).AddMonths(1).ToString("yyyy/MM/dd"))
+            //        {
+            //            dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.IndianRed;
+            //        }
+            //        else if (e.Value.ToString() == date.AddYears(-1).AddMonths(2).ToString("yyyy/MM/dd"))
+            //        {
+            //            dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Tomato;
+            //        }
+            //        else if (e.Value.ToString() == date.AddYears(-1).AddMonths(3).ToString("yyyy/MM/dd"))
+            //        {
+            //            dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.PaleVioletRed;
+            //        }
+            //        else if (e.Value.ToString() == date.AddYears(-1).AddMonths(4).ToString("yyyy/MM/dd"))
+            //        {
+            //            dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
+            //        }
+            //        else if (e.Value.ToString() == date.AddYears(-1).AddMonths(5).ToString("yyyy/MM/dd"))
+            //        {
+            //            dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.GreenYellow;
+            //        }
+            //        else if (e.Value.ToString() == date.AddYears(-1).AddMonths(6).ToString("yyyy/MM/dd"))
+            //        {
+            //            dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.YellowGreen;
+            //        }
+            //    }
+            //}
+        }
+
+
+
+        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //初期処理エラー対応
+            if (flg)
+            {
+                flg = false;
+                return;
+            }
+
+            GetComboData();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            GetComboData();
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            //押されたキーがエンターキーかどうかの条件分岐
+            if (e.KeyCode == System.Windows.Forms.Keys.Enter)
+            {
+                GetComboData();
+            }
+        }
+    }
+}
